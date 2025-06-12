@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:E:/Manim_Projects/Lissajous/media/videos/main/1080p60/partial_movie_files/DynamicOscilloscope/3977891868_1728214939_1071388564.mp4'

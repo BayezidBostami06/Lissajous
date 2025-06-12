@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:E:/Manim_Projects/Lissajous/media/videos/main/1080p60/partial_movie_files/TangentAnimation/3977891868_1156530353_1115243326.mp4'
