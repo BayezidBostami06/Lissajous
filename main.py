@@ -93,7 +93,7 @@ class DynamicOscilloscope(Scene):
         # Display amplitude, frequency, and phase difference
 
         A = [1, 1.5]
-        f = [2, 3]
+        f = [2, 2.05]
         delta_phi = 30 # in degrees
         # Didn't multiply here cz converting from radian to degree gives inaccurate decimals.
         # Instead, I multiplied later in the plot function.
@@ -141,14 +141,3 @@ class DynamicOscilloscope(Scene):
         T = 10
         self.play(alpha.animate.set_value(T), rate_func=linear, run_time=T)
 
-
-class TangentAnimation(Scene):
-    def construct(self):
-        ax = Axes()
-        sine = ax.plot(np.sin, color=RED)
-        alpha = ValueTracker(0)
-
-        sine = always_redraw(lambda: ax.plot(lambda x: np.sin(2*PI*1.5*(x+alpha.get_value()))))
-
-        self.add(ax, sine)
-        self.play(alpha.animate.set_value(1), rate_func=linear, run_time=2)
