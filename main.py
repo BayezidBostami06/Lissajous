@@ -94,30 +94,21 @@ class DynamicOscilloscope(Scene):
 
         A = [1, 1]
         f = [2, 2]
-        delta_phi = 30 # in degrees
+        delta_phi = 0 # in degrees
         # Didn't multiply here cz converting from radian to degree gives inaccurate decimals.
         # Instead, I multiplied later in the plot function.
 
         
         conditions = VGroup(
-            MathTex("A_x =", A[1], "\\text{V}"),
-            MathTex("f_x =", f[1], "\\text{Hz}"),
-            MathTex("A_y =", A[0], "\\text{V}"),
-            MathTex("f_y =", f[0], "\\text{Hz}"),
-            MathTex("\\Delta \\phi =", delta_phi, "^\\circ")
+            MathTex("A_x ="),
+            MathTex("f_x ="),
+            MathTex("A_y ="),
+            MathTex("f_y ="),
+            MathTex("\\Delta \\phi =")
         )
-
-        def conditions_updater(mob):
-            mob[0].set_value(A[1])
-            mob[1].set_value(f[1])
-            mob[2].set_value(A[0])
-            mob[3].set_value(f[0])
-            mob[4].set_value(delta_phi)
-
-        conditions.add_updater(conditions_updater)
+        conditions.arrange(DOWN, aligned_edge=LEFT).next_to(monitor, RIGHT)
 
         self.add(conditions)
-        conditions.arrange(DOWN, aligned_edge=LEFT).next_to(monitor, RIGHT)
 
         ##########
         # DYNAMIC PART
@@ -151,21 +142,22 @@ class DynamicOscilloscope(Scene):
         self.add(hline, vline)
 
         # Run
-        def Play(t):
+        def Play(t, A=A, f=f, delta_phi=delta_phi):
+            conditions = VGroup(
+                MathTex("A_x =", A[1], "\\text{V}"),
+                MathTex("f_x =", f[1], "\\text{Hz}"),
+                MathTex("A_y =", A[0], "\\text{V}"),
+                MathTex("f_y =", f[0], "\\text{Hz}"),
+                MathTex("\\Delta \\phi =", delta_phi, "^\\circ")
+            )
+            conditions.arrange(DOWN, aligned_edge=LEFT).next_to(monitor, RIGHT)
             self.play(time.animate.set_value(t), rate_func=linear, run_time=t)
             time.set_value(0)
         
         Play(10)
 
-        delta_phi = 0
-        f = [3, 4]
+        Play(10, f = [1,1.1])
+        
+        Play(10, A = [1,1.2])
 
-        Play(10)
-
-        f = [5, 6]
-
-        Play(10)
-
-        delta_phi = 90
-        f = [7, 8]
-        Play(10)
+        Play(10, f = [2,2.2], delta_phi = 30)
