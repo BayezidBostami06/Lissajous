@@ -92,8 +92,8 @@ class DynamicOscilloscope(Scene):
 
         # Display amplitude, frequency, and phase difference
 
-        A = [1, 1.5]
-        f = [2, 2.05]
+        A = [1, 1]
+        f = [2, 2]
         delta_phi = 30 # in degrees
         # Didn't multiply here cz converting from radian to degree gives inaccurate decimals.
         # Instead, I multiplied later in the plot function.
@@ -106,6 +106,16 @@ class DynamicOscilloscope(Scene):
             MathTex("f_y =", f[0], "\\text{Hz}"),
             MathTex("\\Delta \\phi =", delta_phi, "^\\circ")
         )
+
+        def conditions_updater(mob):
+            mob[0].set_value(A[1])
+            mob[1].set_value(f[1])
+            mob[2].set_value(A[0])
+            mob[3].set_value(f[0])
+            mob[4].set_value(delta_phi)
+
+        conditions.add_updater(conditions_updater)
+
         self.add(conditions)
         conditions.arrange(DOWN, aligned_edge=LEFT).next_to(monitor, RIGHT)
 
@@ -116,14 +126,17 @@ class DynamicOscilloscope(Scene):
 
         # Create timer
 
-        alpha = ValueTracker(0)
+        time = ValueTracker(0)
+
+        timer = always_redraw(lambda: MathTex("t =", f"{time.get_value():.2f}", "\\text{s}").to_corner(UL))
+        self.add(timer)
 
 
         # Plot two sine functions along two axes.
 
         curves = [
-            always_redraw(lambda: ax[0].plot(lambda x: A[0]*np.sin(2*PI*f[0]*(x+alpha.get_value())), x_range=[0, 2.75])),
-            always_redraw(lambda: ax[1].plot(lambda x: A[1]*np.sin(2*PI*f[1]*(x+alpha.get_value())+delta_phi), x_range=[0, 2.75]))
+            always_redraw(lambda: ax[0].plot(lambda x: A[0]*np.sin(2*PI*f[0]*(x+time.get_value())), x_range=[0, 2.75])),
+            always_redraw(lambda: ax[1].plot(lambda x: A[1]*np.sin(2*PI*f[1]*(x+time.get_value())+delta_phi), x_range=[0, 2.75]))
         ]
         self.add(*curves)
 
@@ -138,6 +151,21 @@ class DynamicOscilloscope(Scene):
         self.add(hline, vline)
 
         # Run
-        T = 10
-        self.play(alpha.animate.set_value(T), rate_func=linear, run_time=T)
+        def Play(t):
+            self.play(time.animate.set_value(t), rate_func=linear, run_time=t)
+            time.set_value(0)
+        
+        Play(10)
 
+        delta_phi = 0
+        f = [3, 4]
+
+        Play(10)
+
+        f = [5, 6]
+
+        Play(10)
+
+        delta_phi = 90
+        f = [7, 8]
+        Play(10)
